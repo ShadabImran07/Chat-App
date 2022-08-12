@@ -17,7 +17,6 @@
     "no-plusplus": [0],
     "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
     "react/prop-types": [0],
-    "react/jsx-no-constructed-context-values": "off",
     "react/jsx-props-no-spreading": [0],
     "import/prefer-default-export": [0],
     "react/no-array-index-key": [0],
@@ -28,6 +27,7 @@
     "no-unused-vars": "off",
     "import/no-extraneous-dependencies": "off",
     "arrow-body-style": [0],
-    "prefer-arrow-callback": [0]
+    "prefer-arrow-callback": [0],
+    "react/jsx-no-constructed-context-values": "off"
   }
 }
