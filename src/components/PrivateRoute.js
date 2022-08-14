@@ -1,5 +1,4 @@
-/* eslint-disable react/function-component-definition */
-import React, { useContext } from 'react';
+import React from 'react';
 import { Redirect, Route } from 'react-router';
 import { Container, Loader } from 'rsuite';
 import { useProfile } from '../context/profile.context';
@@ -18,6 +17,7 @@ const PrivateRoute = ({ children, ...routeProps }) => {
   if (!profile && !isLoading) {
     return <Redirect to="/signin" />;
   }
+
   return <Route {...routeProps}>{children}</Route>;
 };
 
