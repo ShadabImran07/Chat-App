@@ -85,6 +85,7 @@ const AvatarUploadBtn = () => {
         name={profile.name}
         className="width-200 height-200 img-fullsize font-huge"
       />
+
       <div>
         <label
           htmlFor="avatar-upload"

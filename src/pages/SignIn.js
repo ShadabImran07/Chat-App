@@ -1,7 +1,6 @@
-/* eslint-disable react/function-component-definition */
 import React from 'react';
 import firebase from 'firebase/app';
-import { Container, Grid, Panel, Row, Col, Button, Icon, Alert } from 'rsuite';
+import { Container, Grid, Row, Panel, Col, Button, Icon, Alert } from 'rsuite';
 import { auth, database } from '../misc/firebase';
 
 const SignIn = () => {
@@ -15,7 +14,8 @@ const SignIn = () => {
           createdAt: firebase.database.ServerValue.TIMESTAMP,
         });
       }
-      Alert.success('Signed In', 4000);
+
+      Alert.success('Signed in', 4000);
     } catch (err) {
       Alert.error(err.message, 4000);
     }
@@ -24,6 +24,7 @@ const SignIn = () => {
   const onFacebookSignIn = () => {
     signInWithProvider(new firebase.auth.FacebookAuthProvider());
   };
+
   const onGoogleSignIn = () => {
     signInWithProvider(new firebase.auth.GoogleAuthProvider());
   };
@@ -35,15 +36,16 @@ const SignIn = () => {
           <Col xs={24} md={12} mdOffset={6}>
             <Panel>
               <div className="text-center">
-                <h2>Welcome To Chat App</h2>
-                <p>Pregressive chat platform for neophytes</p>
+                <h2>Welcome to Chat</h2>
+                <p>Progressive chat platform for neophytes</p>
               </div>
+
               <div className="mt-3">
                 <Button block color="blue" onClick={onFacebookSignIn}>
-                  <Icon icon="facebook" /> Continue with Facebbok
+                  <Icon icon="facebook" /> Continue with Facebook
                 </Button>
 
-                <Button block color="red" onClick={onGoogleSignIn}>
+                <Button block color="green" onClick={onGoogleSignIn}>
                   <Icon icon="google" /> Continue with Google
                 </Button>
               </div>
