@@ -1,93 +1,58 @@
-import React, { useState } from 'react';
-import { Tag, Icon, Button, Alert } from 'rsuite';
-import firebase from 'firebase/app';
-import { auth } from '../../misc/firebase';
+import React from 'react';
+import { Drawer, Button, Divider, Alert } from 'rsuite';
+import { useProfile } from '../../context/profile.context';
+import EditableInput from '../EditableInput';
+import { database } from '../../misc/firebase';
+import ProviderBlock from './ProviderBlock';
+import AvatarUploadBtn from './AvatarUploadBtn';
+import { getUserUpdates } from '../../misc/helpers';
 
-const ProviderBlock = () => {
-  const [isConnected, setIsConnected] = useState({
-    'google.com': auth.currentUser.providerData.some(
-      data => data.providerId === 'google.com'
-    ),
-    'facebook.com': auth.currentUser.providerData.some(
-      data => data.providerId === 'facebook.com'
-    ),
-  });
+const Dashboard = ({ onSignOut }) => {
+  const { profile } = useProfile();
 
-  const updateIsConnected = (providerId, value) => {
-    setIsConnected(p => {
-      return {
-        ...p,
-        [providerId]: value,
-      };
-    });
-  };
-
-  const unlink = async providerId => {
+  const onSave = async newData => {
     try {
-      if (auth.currentUser.providerData.length === 1) {
-        throw new Error(`You can not disconnect from ${providerId}`);
-      }
+      const updates = await getUserUpdates(
+        profile.uid,
+        'name',
+        newData,
+        database
+      );
 
-      await auth.currentUser.unlink(providerId);
-      updateIsConnected(providerId, false);
-      Alert.info(`Disconnected from ${providerId}`, 4000);
+      await database.ref().update(updates);
+
+      Alert.success('Nickname has been updated', 4000);
     } catch (err) {
       Alert.error(err.message, 4000);
     }
   };
 
-  const unlinkFacebook = () => {
-    unlink('facebook.com');
-  };
-  const unlinkGoogle = () => {
-    unlink('google.com');
-  };
-
-  const link = async provider => {
-    try {
-      await auth.currentUser.linkWithPopup(provider);
-      Alert.info(`Linked to ${provider.providerId}`, 4000);
-      updateIsConnected(provider.providerId, true);
-    } catch (err) {
-      Alert.error(err.message, 400);
-    }
-  };
-
-  const linkFacebook = () => {
-    link(new firebase.auth.FacebookAuthProvider());
-  };
-  const linkGoogle = () => {
-    link(new firebase.auth.GoogleAuthProvider());
-  };
-
   return (
-    <div>
-      {isConnected['google.com'] && (
-        <Tag color="green" closable onClose={unlinkGoogle}>
-          <Icon icon="google" /> Connected
-        </Tag>
-      )}
-      {isConnected['facebook.com'] && (
-        <Tag color="blue" closable onClose={unlinkFacebook}>
-          <Icon icon="facebook" /> Connected
-        </Tag>
-      )}
+    <>
+      <Drawer.Header>
+        <Drawer.Title>Dashboard</Drawer.Title>
+      </Drawer.Header>
 
-      <div className="mt-2">
-        {!isConnected['google.com'] && (
-          <Button block color="green" onClick={linkGoogle}>
-            <Icon icon="google" /> Link to Google
-          </Button>
-        )}
+      <Drawer.Body>
+        <h3>Hey, {profile.name}</h3>
+        <ProviderBlock />
+        <Divider />
+        <EditableInput
+          name="nickname"
+          initialValue={profile.name}
+          onSave={onSave}
+          label={<h6 className="mb-2">Nickname</h6>}
+        />
+        <AvatarUploadBtn />
+      </Drawer.Body>
 
-        {!isConnected['facebook.com'] && (
-          <Button block color="blue" onClick={linkFacebook}>
-            <Icon icon="facebook" /> Link to Facebook
-          </Button>
-        )}
-      </div>
-    </div>
+      <Drawer.Footer>
+        <Button block color="red" onClick={onSignOut}>
+          Sign out
+        </Button>
+      </Drawer.Footer>
+    </>
   );
 };
 
-export default ProviderBlock;
+export default Dashboard;
