@@ -28,6 +28,7 @@
     "import/no-extraneous-dependencies": "off",
     "arrow-body-style": [0],
     "prefer-arrow-callback": [0],
-    "react/jsx-no-constructed-context-values": "off"
+    "react/jsx-no-constructed-context-values": "off",
+    "no-param-reassign": "off"
   }
 }
